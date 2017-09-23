@@ -23,7 +23,8 @@ VERSION	:=	$(CITRO3D_MAJOR).$(CITRO3D_MINOR).$(CITRO3D_PATCH)
 #---------------------------------------------------------------------------------
 TARGET		:=	citro3d
 SOURCES		:=	source \
-				source/maths
+				source/maths \
+				source/tex3ds
 DATA		:=	data
 INCLUDES	:=	include
 
