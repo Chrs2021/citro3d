@@ -24,8 +24,10 @@
  *  @brief Tex3DS routines
  */
 #include "tex3ds.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 /** @brief Tex3DS texture
  */
@@ -336,6 +338,17 @@ texture_import(Tex3DS_Buffer *buffer, C3D_Tex *tex, C3D_TexCube *texcube, bool v
 }
 
 Tex3DS_Texture
+Tex3DS_TextureImport(const void *input, C3D_Tex *tex, C3D_TexCube *texcube, bool vram)
+{
+  Tex3DS_Buffer buffer;
+  buffer.data = (void*)input;
+  buffer.size = SIZE_MAX;
+  buffer.pos  = 0;
+
+  return texture_import(&buffer, tex, texcube, vram, NULL, NULL);
+}
+
+Tex3DS_Texture
 Tex3DS_TextureImportCallback(C3D_Tex *tex, C3D_TexCube *texcube, bool vram,
                              Tex3DS_DataCallback callback, void *userdata)
 {
@@ -350,15 +363,76 @@ Tex3DS_TextureImportCallback(C3D_Tex *tex, C3D_TexCube *texcube, bool vram,
   return texture;
 }
 
+static ssize_t
+callback_fd(void *userdata, void *buffer, size_t size)
+{
+  int fd = *(int*)userdata;
+
+  return read(fd, buffer, size);
+}
+
 Tex3DS_Texture
-Tex3DS_TextureImport(const void *input, C3D_Tex *tex, C3D_TexCube *texcube, bool vram)
+Tex3DS_TextureImportFD(int fd, C3D_Tex *tex, C3D_TexCube *texcube, bool vram)
 {
   Tex3DS_Buffer buffer;
-  buffer.data = (void*)input;
-  buffer.size = SIZE_MAX;
-  buffer.pos  = 0;
+  if(!Tex3DS_BufferInit(&buffer, 1024))
+    return NULL;
 
-  return texture_import(&buffer, tex, texcube, vram, NULL, NULL);
+  off_t offset = lseek(fd, 0, SEEK_CUR);
+  if(offset == (off_t)-1)
+  {
+    Tex3DS_BufferDestroy(&buffer);
+    return NULL;
+  }
+
+  Tex3DS_Texture texture = texture_import(&buffer, tex, texcube, vram,
+                                          callback_fd, &fd);
+
+  offset += buffer.total;
+  if(texture && lseek(fd, offset, SEEK_SET) != 0)
+  {
+    Tex3DS_TextureFree(texture);
+    texture = NULL;
+  }
+
+  Tex3DS_BufferDestroy(&buffer);
+  return texture;
+}
+
+static ssize_t
+callback_stdio(void *userdata, void *buffer, size_t size)
+{
+  FILE *fp = (FILE*)userdata;
+
+  return fread(buffer, 1, size, fp);
+}
+
+Tex3DS_Texture
+Tex3DS_TextureImportStdio(FILE *fp, C3D_Tex *tex, C3D_TexCube *texcube, bool vram)
+{
+  Tex3DS_Buffer buffer;
+  if(!Tex3DS_BufferInit(&buffer, 1024))
+    return NULL;
+
+  off_t offset = ftello(fp);
+  if(offset == (off_t)-1)
+  {
+    Tex3DS_BufferDestroy(&buffer);
+    return NULL;
+  }
+
+  Tex3DS_Texture texture = texture_import(&buffer, tex, texcube, vram,
+                                          callback_stdio, fp);
+
+  offset += buffer.total;
+  if(texture && fseeko(fp, offset, SEEK_SET) != 0)
+  {
+    Tex3DS_TextureFree(texture);
+    texture = NULL;
+  }
+
+  Tex3DS_BufferDestroy(&buffer);
+  return texture;
 }
 
 const Tex3DS_SubTexture*

@@ -38,6 +38,7 @@ Tex3DS_BufferInit(Tex3DS_Buffer *buffer, size_t size)
   buffer->limit = size;
   buffer->size  = 0;
   buffer->pos   = 0;
+  buffer->total = 0;
 
   return true;
 }
@@ -59,6 +60,7 @@ Tex3DS_BufferRead(Tex3DS_Buffer *buffer, void *dest, size_t size,
     {
       memcpy(dest, buffer->data + buffer->pos, size);
       buffer->pos += size;
+      buffer->total += size;
       return true;
     }
 
@@ -68,6 +70,7 @@ Tex3DS_BufferRead(Tex3DS_Buffer *buffer, void *dest, size_t size,
       memcpy(dest, buffer->data + buffer->pos, buffer->size - buffer->pos);
       dest  = (uint8_t*)dest + (buffer->size - buffer->pos);
       size -= buffer->size - buffer->pos;
+      buffer->total += buffer->size - buffer->pos;
 
       assert(size != 0);
     }

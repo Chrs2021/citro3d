@@ -30,7 +30,9 @@
 #else
 #include <citro3d.h>
 #endif
+
 #include <stdint.h>
+#include <stdio.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -61,6 +63,34 @@ Tex3DS_Texture Tex3DS_TextureImport(const void *input, C3D_Tex *tex, C3D_TexCube
  */
 Tex3DS_Texture Tex3DS_TextureImportCallback(C3D_Tex *tex, C3D_TexCube *texcube, bool vram,
                                             Tex3DS_DataCallback callback, void *userdata);
+
+/** @brief Import Tex3DS texture
+ *
+ *  Starts reading at the current file descriptor's offset. The file
+ *  descriptor's position is left at the end of the decoded data. On error, the
+ *  file descriptor's position is indeterminate.
+ *
+ *  @param[in]  fd       Open file descriptor
+ *  @param[out] tex      Citro3D texture
+ *  @param[out] texcube  Citro3D texcube
+ *  @param[in]  vram     Whether to store textures in VRAM
+ *  @returns Tex3DS texture
+ */
+Tex3DS_Texture Tex3DS_TextureImportFD(int fd, C3D_Tex *tex, C3D_TexCube *texcube, bool vram);
+
+/** @brief Import Tex3DS texture
+ *
+ *  Starts reading at the current file stream's offset. The file stream's
+ *  position is left at the end of the decoded data. On error, the file
+ *  stream's position is indeterminate.
+ *
+ *  @param[in]  fp       Open file stream
+ *  @param[out] tex      Citro3D texture
+ *  @param[out] texcube  Citro3D texcube
+ *  @param[in]  vram     Whether to store textures in VRAM
+ *  @returns Tex3DS texture
+ */
+Tex3DS_Texture Tex3DS_TextureImportStdio(FILE *fp, C3D_Tex *tex, C3D_TexCube *texcube, bool vram);
 
 /** @brief Get sub-texture
  *  @param[in] texture Tex3DS texture

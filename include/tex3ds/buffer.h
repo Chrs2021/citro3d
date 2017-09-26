@@ -64,6 +64,7 @@ Tex3DS_BufferGet(Tex3DS_Buffer *buffer, uint8_t *dest,
   if(buffer->pos < buffer->size)
   {
     *dest = buffer->data[buffer->pos++];
+    ++buffer->total;
     return true;
   }
 

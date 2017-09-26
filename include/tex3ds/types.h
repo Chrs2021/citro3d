@@ -35,6 +35,7 @@ typedef struct Tex3DS_Buffer
   size_t  limit; ///< Max buffer size
   size_t  size;  ///< Current buffer size
   size_t  pos;   ///< Buffer position
+  size_t  total; ///< Total bytes consumed
 } Tex3DS_Buffer;
 
 /** @brief I/O vector */
