@@ -341,9 +341,10 @@ Tex3DS_Texture
 Tex3DS_TextureImport(const void *input, C3D_Tex *tex, C3D_TexCube *texcube, bool vram)
 {
   Tex3DS_Buffer buffer;
-  buffer.data = (void*)input;
-  buffer.size = SIZE_MAX;
-  buffer.pos  = 0;
+  buffer.data  = (void*)input;
+  buffer.size  = SIZE_MAX;
+  buffer.pos   = 0;
+  buffer.total = 0;
 
   return texture_import(&buffer, tex, texcube, vram, NULL, NULL);
 }
