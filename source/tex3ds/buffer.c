@@ -24,6 +24,7 @@
  *  @brief Buffer routines
  */
 #include "tex3ds.h"
+#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -67,7 +68,12 @@ Tex3DS_BufferRead(Tex3DS_Buffer *buffer, void *dest, size_t size,
       memcpy(dest, buffer->data + buffer->pos, buffer->size - buffer->pos);
       dest  = (uint8_t*)dest + (buffer->size - buffer->pos);
       size -= buffer->size - buffer->pos;
+
+      assert(size != 0);
     }
+
+    if(!callback)
+      return false;
 
     // fetch some more data
     buffer->size = buffer->pos = 0;

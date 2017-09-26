@@ -203,11 +203,11 @@ iov_memmove(iov_iter *out, iov_iter *in, size_t size)
 
     size -= bytes;
 
-    while(bytes-- > 0)
-      *outbuf++ = *inbuf++;
-
     iov_add(out, bytes);
     iov_add(in, bytes);
+
+    while(bytes-- > 0)
+      *outbuf++ = *inbuf++;
   }
 }
 
@@ -282,7 +282,7 @@ lzss_decode(Tex3DS_Buffer *buffer, const Tex3DS_IOVec *iov, size_t iovcnt,
 
       iov_iter in = out;
       iov_sub(&in, disp+1);
-      iov_memmove(&out, &in, size);
+      iov_memmove(&out, &in, len);
     }
     else // uncompressed block
     {
@@ -379,7 +379,7 @@ lz11_decode(Tex3DS_Buffer *buffer, const Tex3DS_IOVec *iov, size_t iovcnt,
 
         iov_iter in = out;
         iov_sub(&in, disp+1);
-        iov_memmove(&out, &in, size);
+        iov_memmove(&out, &in, len);
       }
       else // uncompressed block
       {
