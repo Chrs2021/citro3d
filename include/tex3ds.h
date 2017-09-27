@@ -92,6 +92,12 @@ Tex3DS_Texture Tex3DS_TextureImportFD(int fd, C3D_Tex *tex, C3D_TexCube *texcube
  */
 Tex3DS_Texture Tex3DS_TextureImportStdio(FILE *fp, C3D_Tex *tex, C3D_TexCube *texcube, bool vram);
 
+/** @brief Get number of sub-textures
+ *  @param[in] texture Tex3DS texture
+ *  @returns Number of sub-textures
+ */
+const size_t Tex3DS_GetNumSubTextures(const Tex3DS_Texture texture);
+
 /** @brief Get sub-texture
  *  @param[in] texture Tex3DS texture
  *  @param[in] index   Sub-texture index

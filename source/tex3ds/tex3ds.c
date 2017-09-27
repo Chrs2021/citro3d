@@ -436,6 +436,12 @@ Tex3DS_TextureImportStdio(FILE *fp, C3D_Tex *tex, C3D_TexCube *texcube, bool vra
   return texture;
 }
 
+const size_t
+Tex3DS_GetNumSubTextures(const Tex3DS_Texture texture)
+{
+  return texture->numSubTextures;
+}
+
 const Tex3DS_SubTexture*
 Tex3DS_GetSubTexture(const Tex3DS_Texture texture, size_t index)
 {
