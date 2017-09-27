@@ -124,7 +124,7 @@ Tex3DS_SubTextureBottomLeft(const Tex3DS_SubTexture *subtex, float *u, float *v)
   }
   else
   {
-    *u = subtex->top;
+    *u = subtex->bottom;
     *v = subtex->left;
   }
 }
@@ -145,7 +145,7 @@ Tex3DS_SubTextureBottomRight(const Tex3DS_SubTexture *subtex, float *u, float *v
   else
   {
     *u = subtex->bottom;
-    *v = subtex->left;
+    *v = subtex->right;
   }
 }
 
@@ -165,7 +165,7 @@ Tex3DS_SubTextureTopLeft(const Tex3DS_SubTexture *subtex, float *u, float *v)
   else
   {
     *u = subtex->top;
-    *v = subtex->right;
+    *v = subtex->left;
   }
 }
 
@@ -184,7 +184,7 @@ Tex3DS_SubTextureTopRight(const Tex3DS_SubTexture *subtex, float *u, float *v)
   }
   else
   {
-    *u = subtex->bottom;
+    *u = subtex->top;
     *v = subtex->right;
   }
 }
